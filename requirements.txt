@@ -7,3 +7,4 @@ beautifulsoup4==4.11.2
 Flask
 load_dotenv
 statsmodels==0.14.0
+gunicorn
