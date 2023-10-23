@@ -17,7 +17,9 @@ from helpers import fig_to_base64
 def get_df_bitcoin_limpio(coin):
     df_data = get_df_bitcoin(coin)
 
-    df_bitcoin_limpio = df_data[["close", "volumeto", "rsi", "macd", "macd_signal"]]
+    df_bitcoin_limpio = df_data[
+        ["time", "close", "volumeto", "rsi", "macd", "macd_signal"]
+    ]
 
     df = df_bitcoin_limpio[df_bitcoin_limpio["volumeto"] != 0]
 
@@ -54,6 +56,8 @@ def between_quartiles(coin):
 
 def extraer_tendencias(btc):
     global precio_actual, tendencia
+
+    time.sleep(5)
 
     page = requests.get(f"https://www.coincarp.com/currencies/{btc}")
 
@@ -176,11 +180,14 @@ def precios_medias(coin, btc):
     mean_price = data["close"].mean()
 
     # Desicion:
-    decision = tomar_decisiones(coin, btc)[0]
+    result = tomar_decisiones(coin, btc)
+    decision = result.split(": ")[1].split(",")[0]
 
     # Calcular indicadores técnicos
     data["MA50"] = data["close"].rolling(window=50).mean()
     data["MA200"] = data["close"].rolling(window=200).mean()
+
+    data = data.set_index("time")
 
     # Crear figura
     fig1, ax1 = plt.subplots(figsize=(10, 4))
@@ -245,9 +252,13 @@ def rsi_tendencias(coin, btc):
 
     # Data Frame
     df = get_df_bitcoin_limpio(coin)
-    df = df[["close", "volumeto", "rsi", "macd", "macd_signal"]]  # ordenamos columnas
+    df = df[
+        ["time", "close", "volumeto", "rsi", "macd", "macd_signal"]
+    ]  # ordenamos columnas
     if df.empty:
         return "No hay suficientes datos(RSI)"
+
+    df = df.set_index("time")
 
     # Calcular el RSI
     rsi = df.iat[-1, 2]
@@ -302,9 +313,13 @@ def macd_tendencias(coin, btc):
 
     # Data Frame
     df = get_df_bitcoin_limpio(coin)
-    df = df[["close", "volumeto", "rsi", "macd", "macd_signal"]]  # ordenamos columnas
+    df = df[
+        ["time", "close", "volumeto", "rsi", "macd", "macd_signal"]
+    ]  # ordenamos columnas
     if df.empty:
         return "No hay suficientes datos(MACD)"
+
+    df = df.set_index("time")
 
     # Calcular el MACD
     macd = df.iat[-1, 3]
