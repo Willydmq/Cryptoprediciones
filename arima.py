@@ -1,5 +1,6 @@
 import os
 import pickle
+import time
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -36,10 +37,11 @@ def predecir(coin):
     data = response.json()
     df = pd.DataFrame(data["Data"]["Data"])
     df["time"] = pd.to_datetime(df["time"], unit="s")
+    df["time"] = df["time"].dt.tz_localize("UTC")
     df = df.set_index("time")
     df_btc_close = df["close"]
 
-    model_pkl = ARIMA(df_btc_close, order=(5, 5, 5))
+    model_pkl = ARIMA(df_btc_close, order=(3, 3, 3))
     results = model_pkl.fit()
 
     ruta_modelo = "./models/modelo_arima.pkl"
@@ -81,6 +83,8 @@ def predecir(coin):
 def grafico_predecir(coin):
     # predicion = None
 
+    start_time = time.time()
+
     symbol = coin
     period = 2000
     interval = 1
@@ -95,6 +99,7 @@ def grafico_predecir(coin):
 
     df = pd.DataFrame(data["Data"]["Data"])
     df["time"] = pd.to_datetime(df["time"], unit="s")
+    df["time"] = df["time"].dt.tz_localize("UTC")
     df = df.set_index("time")
     df_btc_close = df["close"]
 
@@ -142,6 +147,10 @@ def grafico_predecir(coin):
 
     predicion = fig_to_base64(fig4)
 
+    end_time = time.time()
+    duration = (end_time - start_time) / 60  # duración en minutos
+    print(f"Tiempo de ejecución: {duration:.2f} minutos")
+
     return predicion
 
 
@@ -160,6 +169,7 @@ def get_df_bitcoin(coin):
     df = pd.DataFrame(data["Data"]["Data"])
 
     df["time"] = pd.to_datetime(df["time"], unit="s")
+    df["time"] = df["time"].dt.tz_localize("UTC")
 
     # Formatee el valor de la columna `time` en el formato `"%Y-%m-%d %H:%M"`.
     df["time"] = df["time"].dt.strftime("%H:%M")
