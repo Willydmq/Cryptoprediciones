@@ -1,5 +1,7 @@
 :root {
-    --color_primario: #5b6a82;
+    --color_primario: rgba(218, 217, 216, 0.661);
+    --aler: red;
+    --button: blue;
 }
 
 
@@ -46,7 +48,7 @@
         padding: 20px;
         display: flex;
         justify-content: center;
-        background-color: rgba(218, 217, 216, 0.661);
+        background-color: var(--color_primario);
         border-width: thick;
         border-style: solid;
         border-color: #000;
@@ -63,7 +65,7 @@
             h1 {
                 font-size: 25px;
                 font-weight: bolder;
-                color: blue;
+                color: var(--button);
             }
 
             input {
@@ -72,12 +74,12 @@
 
             .alert {
                 font-size: 10px;
-                color: red;
+                color: var(--aler);
             }
 
             button {
                 width: 120px;
-                background-color: blue;
+                background-color: var(--button);
                 border-radius: 3px;
                 font-size: 15px;
                 font-weight: bolder;
@@ -119,7 +121,7 @@
         margin-left: 20px;
 
         p {
-            color: red;
+            color: var(--aler);
             font-size: 20px;
         }
     }
