@@ -6,6 +6,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import requests
 from bs4 import BeautifulSoup
+import time
 
 matplotlib.use("Agg")
 
@@ -108,6 +109,8 @@ def get_crypto_data():
 
         if page > 19:
             break
+
+        time.sleep(5)
 
         page += 1
 
